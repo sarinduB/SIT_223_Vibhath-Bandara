@@ -22,10 +22,10 @@ pipeline {
             post {
                 always {
                     emailext(
-                        body: """<p>Unit and Integration Tests have completed.</p>
-                                 <p>Status: ${currentBuild.currentResult}</p>""",
+                        body: "Unit and Integration Tests have completed.
+                            Status: ${currentBuild.currentResult",
                         subject: "Unit and Integration Tests: ${currentBuild.currentResult}",
-                        to: "${env.EMAIL_RECIPIENT}",
+                        to: env.EMAIL_RECIPIENT
                         attachLog: true  // Attaches the console log of this stage
                     )
                 }
@@ -47,10 +47,10 @@ pipeline {
             post {
                 always {
                     emailext(
-                        body: """<p>Security Scan has completed.</p>
-                                 <p>Status: ${currentBuild.currentResult}</p>""",
+                        body: "Security Scan has completed.</p>
+                            Status: ${currentBuild.currentResult}",
                         subject: "Security Scan: ${currentBuild.currentResult}",
-                        to: "${env.EMAIL_RECIPIENT}",
+                        to: env.EMAIL_RECIPIENT,
                         attachLog: true  // Attaches the console log of this stage
                     )
                 }
