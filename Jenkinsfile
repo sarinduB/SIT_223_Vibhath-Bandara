@@ -4,14 +4,17 @@ pipeline {
         pollSCM('H/2 * * * *') // Polls the SCM every 2 minutes for changes
     }
     environment {
-        EMAIL_RECIPIENT = 's223141055@deakin.edu.au' // Set the recipient email address
+        EMAIL_RECIPIENT = 'sarindu.v.bandara@gmail.com' // Set the recipient email address
     }
     stages {
         stage('Build') {
             steps {
                 echo 'Building the code...'
                 echo 'Using Maven for building the project.'
-                // Example: sh 'mvn clean install'
+            post{
+                mail to: EMAIL_RECIPIENT
+                subject: "Build Status Email"
+                body: "Build was successful"
             }
         }
         stage('Unit and Integration Tests') {
