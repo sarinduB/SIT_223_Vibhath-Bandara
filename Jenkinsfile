@@ -4,7 +4,7 @@ pipeline {
         pollSCM('H/2 * * * *') // Polls the SCM every 2 minutes for changes
     }
     environment {
-        EMAIL_RECIPIENT = 's223141055@deakin.edu.au'
+        EMAIL_RECIPIENT = 's223141055@deakin.edu.au' // Set the recipient email address
     }
     stages {
         stage('Build') {
@@ -23,10 +23,13 @@ pipeline {
             post {
                 always {
                     script {
-                        emailext body: "Unit and Integration Tests completed",
-                                 recipientProviders: [[$class: 'DevelopersRecipientProvider']],
-                                 subject: "Unit and Integration Tests ${currentBuild.currentResult}",
-                                 to: "${env.EMAIL_RECIPIENT}"
+                        emailext(
+                            body: """<p>Unit and Integration Tests have completed.</p>
+                                    <p>Status: ${currentBuild.currentResult}</p>""",
+                            subject: "Unit and Integration Tests: ${currentBuild.currentResult}",
+                            to: "${env.EMAIL_RECIPIENT}",
+                            attachLog: true
+                        )
                     }
                 }
             }
@@ -47,10 +50,13 @@ pipeline {
             post {
                 always {
                     script {
-                        emailext body: "Security Scan completed",
-                                 recipientProviders: [[$class: 'DevelopersRecipientProvider']],
-                                 subject: "Security Scan ${currentBuild.currentResult}",
-                                 to: "${env.EMAIL_RECIPIENT}"
+                        emailext(
+                            body: """<p>Security Scan has completed.</p>
+                                    <p>Status: ${currentBuild.currentResult}</p>""",
+                            subject: "Security Scan: ${currentBuild.currentResult}",
+                            to: "${env.EMAIL_RECIPIENT}",
+                            attachLog: true
+                        )
                     }
                 }
             }
