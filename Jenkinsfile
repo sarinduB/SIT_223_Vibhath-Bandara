@@ -4,7 +4,7 @@ pipeline {
         pollSCM('H/2 * * * *') // Polls the SCM every 2 minutes for changes
     }
     environment {
-        EMAIL_RECIPIENT = 'youremail@example.com'
+        EMAIL_RECIPIENT = 's223141055@deakin.edu.au'
     }
     stages {
         stage('Build') {
