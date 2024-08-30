@@ -12,12 +12,12 @@ pipeline {
                 echo 'Building the code...'
                 echo 'Using Maven for building the project.'
             }
-            post {
-                success {
-                    mail to: "${env.EMAIL_RECIPIENT}",
-                         subject: "Build Status Email",
-                         body: "Build was successful"
-                }
+            //post {
+            //    success {
+            //        mail to: "${env.EMAIL_RECIPIENT}",
+            //             subject: "Build Status Email",
+            //             body: "Build was successful"
+            //    }
             }
         }
         stage('Unit and Integration Tests') {
