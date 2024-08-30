@@ -1,8 +1,5 @@
 pipeline {
     agent any
-    triggers {
-        pollSCM('H/2 * * * *')
-    }
     environment {
         EMAIL_RECIPIENT = 'sarindu.v.bandara@gmail.com'
     }
