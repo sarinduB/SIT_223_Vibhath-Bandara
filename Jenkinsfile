@@ -18,7 +18,7 @@ pipeline {
             //             subject: "Build Status Email",
             //             body: "Build was successful"
             //    }
-            }
+            //}
         }
         stage('Unit and Integration Tests') {
             steps {
