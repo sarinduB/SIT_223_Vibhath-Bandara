@@ -1,47 +1,80 @@
-pipeline{
+pipeline {
     agent any
-    
-    environment{
-        DIRECTORY_PATH = 'Deakin/SIT_223'
-        TESTING_ENVIRONMENT = 'AmazingTestEnv'
-        PRODUCTION_ENVIRONMENT = 'Vibhath_Bandara'
+    triggers {
+        pollSCM('H/2 * * * *') // Polls the SCM every 2 minutes for changes
     }
-    stages{
-        stage('Build'){
+    environment {
+        EMAIL_RECIPIENT = 'youremail@example.com'
+    }
+    stages {
+        stage('Build') {
             steps {
-                echo "fetch the source code from the directory path specified by the environment variable: $DIRECTORY_PATH"
-                
-                echo "compile the code and generate any necessary artifacts"
+                echo 'Building the code...'
+                echo 'Using Maven for building the project.'
+                // Example: sh 'mvn clean install'
             }
         }
-        stage('Test'){
+        stage('Unit and Integration Tests') {
             steps {
-                echo "running unit tests"
-                echo "running integration tests"
+                echo 'Running Unit and Integration Tests...'
+                echo 'Using JUnit for unit testing and TestNG for integration tests.'
+                // Example: sh 'mvn test'
+            }
+            post {
+                always {
+                    script {
+                        emailext body: "Unit and Integration Tests completed",
+                                 recipientProviders: [[$class: 'DevelopersRecipientProvider']],
+                                 subject: "Unit and Integration Tests ${currentBuild.currentResult}",
+                                 to: "${env.EMAIL_RECIPIENT}"
+                    }
+                }
             }
         }
-        stage('Code Quality Check'){
+        stage('Code Analysis') {
             steps {
-                echo "checking the quality of the code"
+                echo 'Analyzing the code...'
+                echo 'Using SonarQube for code analysis.'
+                // Example: sh 'sonar-scanner'
             }
         }
-        stage('Deploy'){
+        stage('Security Scan') {
             steps {
-                echo "deploy the application to the testing environment specified by the environment variable: $TESTING_ENVIRONMENT"
+                echo 'Running Security Scan...'
+                echo 'Using OWASP Dependency-Check for security scanning.'
+                // Example: sh 'dependency-check --scan ./'
+            }
+            post {
+                always {
+                    script {
+                        emailext body: "Security Scan completed",
+                                 recipientProviders: [[$class: 'DevelopersRecipientProvider']],
+                                 subject: "Security Scan ${currentBuild.currentResult}",
+                                 to: "${env.EMAIL_RECIPIENT}"
+                    }
+                }
             }
         }
-        stage('Approval'){
+        stage('Deploy to Staging') {
             steps {
-                echo "waiting for manual approval..."
-                sleep 10
-                echo "approval received."
+                echo 'Deploying to Staging...'
+                echo 'Deploying to AWS EC2 instance for staging.'
+                // Example: sh 'scp target/app.war ec2-user@staging-server:/path/to/deploy'
             }
         }
-        stage('Deploy to Production'){
+        stage('Integration Tests on Staging') {
             steps {
-                echo "deploy the code to the production environment: $PRODUCTION_ENVIRONMENT"
+                echo 'Running Integration Tests on Staging...'
+                echo 'Using Postman or Selenium for integration testing on staging.'
+                // Example: sh 'run-integration-tests.sh'
             }
-            
+        }
+        stage('Deploy to Production') {
+            steps {
+                echo 'Deploying to Production...'
+                echo 'Deploying to AWS EC2 instance for production.'
+                // Example: sh 'scp target/app.war ec2-user@production-server:/path/to/deploy'
+            }
         }
     }
 }
